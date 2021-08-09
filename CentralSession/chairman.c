@@ -59,7 +59,8 @@ int main(int argc, char const *argv[])
     while (1)
     {
         msgrcv(id_fila, &message, sizeof(message), 1, 0);
-        handle_msgs(message);
+        struct message_buffer resp_message = handle_msgs(message);
+        msgsnd(id_fila, &resp_message, sizeof(resp_message), 0);
     }
 
     return 0;
