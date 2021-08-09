@@ -49,7 +49,7 @@ Mensagens| o primeiro campo **_msgtyp_** irá destinar para o processo correto (
 * **_del_ _msgs_** - apenas deleta as mensagens guardadas no processo local, não deleta a fila de mensagens global
 * **_users_** - mostra todos os usuários do sistema
 * **_myid_** - mostra o identificador do usuário atual
-* **_exit_* - sai do sistema e desloga da lista
+* **_exit_** - sai do sistema e desloga da lista
 
 Sistema ThreadTheMatrix
 ------
