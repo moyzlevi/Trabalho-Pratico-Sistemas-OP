@@ -55,3 +55,5 @@ Sistema ThreadTheMatrix
 ------
 Implemente um programa que faça multiplicação de matrizes quadradas e que utilize _threads_ para acelerar o processo. Faça outro que não utilize e compare-os.
 Faça a partição da matriz C atribuindo uma linha para cada _thread_
+  
+https://moodle.ufcspa.edu.br/pluginfile.php/277005/mod_resource/content/1/TrabPraticProgConcorrente.pdf
