@@ -28,15 +28,13 @@ int main(int argc, char const *argv[])
     printf("Digite o usuário para se logar:\n");
     strcpy(message.arg,"login");
     scanf("%s", message.txt);  
-    printf("Captured[arg]: %s\n", message.arg);
-    printf("Captured[txt]: %s\n", message.txt);
+    printf("\nCaptured[arg][txt]: %s-%s\n", message.arg,message.txt);
     message.source = getpid();
     message.msgtyp = 1;
 
     msgsnd(msg_id, &message, sizeof(message), 0);
     
     msgrcv(msg_id, &message, sizeof(message), 1, 0);
-    printf("Captured[arg]: %s\n", message.arg);
-    printf("Captured[txt]: %s\n", message.txt);
+    printf("\nRecebido[arg][txt]: %s-%s\n", message.arg,message.txt);
     return 0;
 }

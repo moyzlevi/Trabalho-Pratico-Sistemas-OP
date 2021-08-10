@@ -24,7 +24,6 @@ int lastUserIndex;
 
 struct message_buffer handle_msgs(struct message_buffer msg)
 {   
-    printf("resp_message in func[arg][txt]: %s-%s\n",msg.arg,msg.txt);
     if (strcmp(msg.arg, "login") == 0)
     {
         int flagFound = 0;
@@ -32,21 +31,25 @@ struct message_buffer handle_msgs(struct message_buffer msg)
         {
             char usr[20];
             strcpy(usr,users[i].username);
+            printf("\n#%dBuscado: %s\n",i,usr);
             if (strcmp(msg.txt, usr) == 0)
             {
                 struct message_buffer resp_msg;
                 resp_msg.msgtyp = msg.source;
+                printf("\033[1;31m");
                 strcpy(resp_msg.txt, "Usuário já existente");
+                strcpy(resp_msg.arg, "fail");
                 return resp_msg;
             }
         }
         //copia pid recebido e nome de usuario para memoria
-        strcpy(users[lastUserIndex].username, msg.arg);
+        strcpy(users[lastUserIndex].username, msg.txt);
         users[lastUserIndex].pid = msg.source;
         lastUserIndex++;
         //retorna mensagem de sucesso
         struct message_buffer resp_msg;
         resp_msg.msgtyp = msg.source;
+        printf(" \033[0;32m");
         strcpy(resp_msg.txt, "Login foi efetuado com sucesso");
         strcpy(resp_msg.arg, "ok");
         return resp_msg;
@@ -65,12 +68,14 @@ int main(int argc, char const *argv[])
     while (1)
     {
         msgrcv(msg_id, &message, sizeof(message), 1, 0);
-        printf("Mensagem recebida[arg][txt]: %s-%s-%d\n",message.arg,message.txt,message.source);
+        printf("\nMensagem recebida[arg][txt][source]: %s-%s-%d\n",message.arg,message.txt,message.source);
         struct message_buffer resp_message = handle_msgs(message);
-        printf("resp_message after func[arg][txt][source]: %s-%s-%d\n",resp_message.arg,resp_message.txt,message.source);
+        printf("\nResp_Message after func[arg][txt][source]: \n%s-%s-%d\n",resp_message.arg,resp_message.txt,message.source);
+        printf("\033[0m");
+        printf("----------------------------------------------------");
         resp_message.msgtyp = 1;
-        //consigo mandar pela mesma fila?
         msgsnd(msg_id, &resp_message, sizeof(resp_message), 0);
+       
     }
 
     return 0;
