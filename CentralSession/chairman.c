@@ -2,12 +2,14 @@
 #include <sys/ipc.h>
 #include <sys/msg.h>
 #include <string.h>
+#include <sys/types.h>
+#include <unistd.h>
 #define SIZE_USERS 20
 
 struct message_buffer
 {
     long msgtyp;
-    long source;
+    pid_t source;
     char arg[10];
     char txt[100];
 };
@@ -22,7 +24,7 @@ int lastUserIndex;
 
 struct message_buffer handle_msgs(struct message_buffer msg)
 {   
-    printf("resp_message[arg][txt]: [%s][%s]",msg.arg,msg.txt);
+    printf("resp_message in func[arg][txt]: %s-%s\n",msg.arg,msg.txt);
     if (strcmp(msg.arg, "login") == 0)
     {
         int flagFound = 0;
@@ -46,6 +48,7 @@ struct message_buffer handle_msgs(struct message_buffer msg)
         struct message_buffer resp_msg;
         resp_msg.msgtyp = msg.source;
         strcpy(resp_msg.txt, "Login foi efetuado com sucesso");
+        strcpy(resp_msg.arg, "ok");
         return resp_msg;
     }
 }
@@ -62,9 +65,11 @@ int main(int argc, char const *argv[])
     while (1)
     {
         msgrcv(msg_id, &message, sizeof(message), 1, 0);
-        printf("Mensagem recebida[arg][txt]: [%s][%s]",message.arg,message.txt);
+        printf("Mensagem recebida[arg][txt]: %s-%s-%d\n",message.arg,message.txt,message.source);
         struct message_buffer resp_message = handle_msgs(message);
-        
+        printf("resp_message after func[arg][txt][source]: %s-%s-%d\n",resp_message.arg,resp_message.txt,message.source);
+        resp_message.msgtyp = 1;
+        //consigo mandar pela mesma fila?
         msgsnd(msg_id, &resp_message, sizeof(resp_message), 0);
     }
 

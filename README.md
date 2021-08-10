@@ -13,6 +13,7 @@ forma centralizada e é composto de dois tipos de processos:
 * Os comandos são reformatados em variaveis pelo **_speaker_** e passados como mensagem para o **_chairman_**
 * Toda interação entre **_speaker_** e **_chairman_** ocorre entre fila única de mensagens compartilhada por todos os processos, o **_chairmain_** deve enviar uma mensagem de feedback
 
+
 Requisitos |  Necessários
 --- | --- 
 Login | O usuário precisa se logar com 20 caractares seu nome (sem senha), verificar se já existe o mesmo nome 

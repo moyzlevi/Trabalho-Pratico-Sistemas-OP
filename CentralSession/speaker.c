@@ -2,13 +2,15 @@
 #include <sys/ipc.h>
 #include <sys/msg.h>
 #include <string.h>
+#include <sys/types.h>
+#include <unistd.h>
 #define SIZE_USERS 20
 int flagLogin;
 
 struct message_buffer
 {
     long msgtyp;
-    long source;
+    pid_t source;
     char arg[10];
     char txt[100];
 };
@@ -22,16 +24,19 @@ int main(int argc, char const *argv[])
     my_key = ftok("progfile", 65);
     msg_id = msgget(my_key, 0666 | IPC_CREAT);
 
-    printf("===========Programa Speaker=========\n");
+    printf("=================Programa Speaker=========PID:%d=======\n",getpid());
     printf("Digite o usuário para se logar:\n");
     strcpy(message.arg,"login");
-    fgets(message.txt, 20, stdin);
-    printf("Captured[arg]: %s", message.arg);
-    printf("Captured[txt]: %s", message.txt);
-    
+    scanf("%s", message.txt);  
+    printf("Captured[arg]: %s\n", message.arg);
+    printf("Captured[txt]: %s\n", message.txt);
+    message.source = getpid();
     message.msgtyp = 1;
 
     msgsnd(msg_id, &message, sizeof(message), 0);
+    
     msgrcv(msg_id, &message, sizeof(message), 1, 0);
+    printf("Captured[arg]: %s\n", message.arg);
+    printf("Captured[txt]: %s\n", message.txt);
     return 0;
 }
