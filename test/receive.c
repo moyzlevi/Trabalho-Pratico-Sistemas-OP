@@ -1,3 +1,5 @@
+//SÓ PARA TESTE
+
 #include <stdio.h>
 #include <sys/ipc.h>
 #include <sys/msg.h>
