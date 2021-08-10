@@ -8,7 +8,7 @@ struct message_buffer
 {
     long msgtyp;
     long source;
-    char arg[5];
+    char arg[10];
     char txt[100];
 };
 
@@ -21,13 +21,15 @@ struct user users[SIZE_USERS];
 int lastUserIndex;
 
 struct message_buffer handle_msgs(struct message_buffer msg)
-{
+{   
+    printf("resp_message[arg][txt]: [%s][%s]",msg.arg,msg.txt);
     if (strcmp(msg.arg, "login") == 0)
     {
         int flagFound = 0;
         for (int i = 0; i < SIZE_USERS; i++)
         {
-            char usr[20] = users[i].username;
+            char usr[20];
+            strcpy(usr,users[i].username);
             if (strcmp(msg.txt, usr) == 0)
             {
                 struct message_buffer resp_msg;
@@ -52,15 +54,18 @@ int main(int argc, char const *argv[])
 {
     lastUserIndex = 0;
     struct message_buffer message;
-    key_t main_key;
-    main_key = ftok("progfile", 65);
-    int id_fila = msgget(main_key, 0666 | IPC_CREAT);
-
+    key_t my_key;
+    int msg_id;
+    my_key = ftok("progfile", 65);
+    msg_id = msgget(my_key, 0666 | IPC_CREAT);
+    printf("===========Programa ChairMan=========\nAguardando Mensagens...\n");
     while (1)
     {
-        msgrcv(id_fila, &message, sizeof(message), 1, 0);
+        msgrcv(msg_id, &message, sizeof(message), 1, 0);
+        printf("Mensagem recebida[arg][txt]: [%s][%s]",message.arg,message.txt);
         struct message_buffer resp_message = handle_msgs(message);
-        msgsnd(id_fila, &resp_message, sizeof(resp_message), 0);
+        
+        msgsnd(msg_id, &resp_message, sizeof(resp_message), 0);
     }
 
     return 0;
