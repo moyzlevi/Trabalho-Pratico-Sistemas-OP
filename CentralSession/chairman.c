@@ -31,12 +31,11 @@ struct message_buffer handle_msgs(struct message_buffer msg)
         {
             char usr[20];
             strcpy(usr,users[i].username);
-            printf("\n#%dBuscado: %s\n",i,usr);
+            // printf("\n#%dBuscado: %s\n",i,usr); --debug
             if (strcmp(msg.txt, usr) == 0)
             {
                 struct message_buffer resp_msg;
                 resp_msg.msgtyp = msg.source;
-                printf("\033[1;31m");
                 strcpy(resp_msg.txt, "Usuário já existente");
                 strcpy(resp_msg.arg, "fail");
                 return resp_msg;
@@ -49,7 +48,7 @@ struct message_buffer handle_msgs(struct message_buffer msg)
         //retorna mensagem de sucesso
         struct message_buffer resp_msg;
         resp_msg.msgtyp = msg.source;
-        printf(" \033[0;32m");
+        
         strcpy(resp_msg.txt, "Login foi efetuado com sucesso");
         strcpy(resp_msg.arg, "ok");
         return resp_msg;
@@ -71,7 +70,6 @@ int main(int argc, char const *argv[])
         printf("\nMensagem recebida[arg][txt][source]: %s-%s-%d\n",message.arg,message.txt,message.source);
         struct message_buffer resp_message = handle_msgs(message);
         printf("\nResp_Message after func[arg][txt][source]: \n%s-%s-%d\n",resp_message.arg,resp_message.txt,message.source);
-        printf("\033[0m");
         printf("----------------------------------------------------");
         resp_message.msgtyp = 1;
         msgsnd(msg_id, &resp_message, sizeof(resp_message), 0);
