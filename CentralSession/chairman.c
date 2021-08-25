@@ -23,14 +23,14 @@ struct user users[SIZE_USERS];
 int lastUserIndex;
 
 struct message_buffer handle_msgs(struct message_buffer msg)
-{   
+{
     if (strcmp(msg.arg, "login") == 0)
     {
         int flagFound = 0;
         for (int i = 0; i < SIZE_USERS; i++)
         {
             char usr[20];
-            strcpy(usr,users[i].username);
+            strcpy(usr, users[i].username);
             // printf("\n#%dBuscado: %s\n",i,usr); --debug
             if (strcmp(msg.txt, usr) == 0)
             {
@@ -53,6 +53,27 @@ struct message_buffer handle_msgs(struct message_buffer msg)
         strcpy(resp_msg.arg, "ok");
         return resp_msg;
     }
+
+    if (strcmp(msg.arg, "logout") == 0)
+    {
+        //Algoritmo para deletar um array de structs
+        for (int i = 0; i < SIZE_USERS; i++)
+        {
+            if (msg.source == users[i].pid)
+            {
+                int j = i;
+                for (j; j < SIZE_USERS - 1; i++)
+                {
+                    users[j] = users[j + 1];
+                }
+            }
+        }
+        struct message_buffer resp_msg;
+        resp_msg.msgtyp = msg.source;
+        strcpy(resp_msg.txt, "Logout Efetuado com Sucesso");
+        strcpy(resp_msg.arg, "ok");
+        return resp_msg;
+    }
 }
 
 int main(int argc, char const *argv[])
@@ -63,17 +84,16 @@ int main(int argc, char const *argv[])
     int msg_id;
     my_key = ftok("progfile", 65);
     msg_id = msgget(my_key, 0666 | IPC_CREAT);
-    printf("===========Programa ChairMan===PID:%d======\nAguardando Mensagens...\n",getpid());
+    printf("===========Programa ChairMan===PID:%d======\nAguardando Mensagens...\n", getpid());
     while (1)
     {
         msgrcv(msg_id, &message, sizeof(message), 1, 0);
-        printf("\nMensagem recebida[arg][txt][source]: %s-%s-%d\n",message.arg,message.txt,message.source);
+        printf("\nMensagem recebida[arg][txt][source]: %s-%s-%d\n", message.arg, message.txt, message.source);
         struct message_buffer resp_message = handle_msgs(message);
-        printf("\nResp_Message after func[arg][txt][source]: \n%s-%s-%d\n",resp_message.arg,resp_message.txt,message.source);
+        printf("\nResp_Message after func[arg][txt][source]: \n%s-%s-%d\n", resp_message.arg, resp_message.txt, message.source);
         printf("----------------------------------------------------");
         resp_message.msgtyp = 1;
         msgsnd(msg_id, &resp_message, sizeof(resp_message), 0);
-       
     }
 
     return 0;
