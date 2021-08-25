@@ -18,11 +18,10 @@ struct message_buffer
     char txt[100];
 } message;
 
-
 void login()
-{   
+{
     while (1)
-    {   
+    {
         fflush(stdin);
         struct message_buffer login_msg;
         //Message Reset
@@ -34,11 +33,11 @@ void login()
         scanf("%s", login_msg.txt);
         printf("\nCaptured[arg][txt]: %s-%s\n", login_msg.arg, login_msg.txt);
         if (strlen(login_msg.txt) <= SIZE_USERS)
-        {   
-            printf("\nEnviado:[arg][txt][source]: %s-%s-%d\n", login_msg.arg, login_msg.txt,login_msg.source);
+        {
+            printf("\nEnviado:[arg][txt][source]: %s-%s-%d\n", login_msg.arg, login_msg.txt, login_msg.source);
             msgsnd(msg_id, &login_msg, sizeof(login_msg), 0);
             msgrcv(msg_id, &login_msg, sizeof(login_msg), 1, 0);
-            printf("\nEnviado:[arg][txt][source]: %s-%s-%d\n", login_msg.arg, login_msg.txt,login_msg.source);
+            printf("\nEnviado:[arg][txt][source]: %s-%s-%d\n", login_msg.arg, login_msg.txt, login_msg.source);
             if (strcmp(login_msg.arg, "ok") == 0)
             {
                 flagLogin = 1;

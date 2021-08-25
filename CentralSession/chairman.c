@@ -48,7 +48,7 @@ struct message_buffer handle_msgs(struct message_buffer msg)
         //retorna mensagem de sucesso
         struct message_buffer resp_msg;
         resp_msg.msgtyp = msg.source;
-        
+        resp_msg.source = getpid();
         strcpy(resp_msg.txt, "Login foi efetuado com sucesso");
         strcpy(resp_msg.arg, "ok");
         return resp_msg;
@@ -63,7 +63,7 @@ int main(int argc, char const *argv[])
     int msg_id;
     my_key = ftok("progfile", 65);
     msg_id = msgget(my_key, 0666 | IPC_CREAT);
-    printf("===========Programa ChairMan=========\nAguardando Mensagens...\n");
+    printf("===========Programa ChairMan===PID:%d======\nAguardando Mensagens...\n",getpid());
     while (1)
     {
         msgrcv(msg_id, &message, sizeof(message), 1, 0);
