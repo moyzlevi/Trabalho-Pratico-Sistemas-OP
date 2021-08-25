@@ -12,6 +12,8 @@ int flagLogin;
 key_t my_key;
 int msg_id;
 int flagLogin;
+char *global_args[10];
+int args_number;
 struct message_buffer
 {
     long msgtyp;
@@ -77,10 +79,11 @@ void logout()
     exit(0);
 }
 
-const char **handle_input()
+void handle_input()
 {
+    args_number = 0;
     clear();
-    const char *current_args[10];
+    char *current_args[50];
     char str[256];
 
     printf("Esperando comandos:\n");
@@ -89,18 +92,25 @@ const char **handle_input()
     char *rest = str;
     int i = 0;
     printf("Splitting string \"%s\" into tokens:\n", str);
+    
     while ((current_args[i] = strtok_r(rest, " ", &rest)))
     {
+        if (strcmp(current_args[i], "exit") == 0)
+        {
+            logout();
+        }
+        char temp[50];
+        strcpy(temp,current_args[i]);
+        // printf("TEMP: %s\n",temp);--debug
+        global_args[i] = 
+
+        // printf("GLOBAL: %s\n",global_args[i]);
         printf("#%d: %s\n", i, current_args[i++]);
+        printf("i:%d\n",i);
+        args_number++;
     }
-
-    if (strcmp(current_args[0], "exit") == 0)
-    {
-        logout();
-    }
-
-    const char **return_args = current_args;
-    return return_args;
+    
+    printf("GLOBAL IN FUNC: %s|%s|%s\n",global_args[0],global_args[1],global_args[2]);
 }
 
 int main(int argc, char const *argv[])
@@ -114,6 +124,9 @@ int main(int argc, char const *argv[])
     while (1)
     {
         handle_input();
+        // printf("%s\n", global_args[0]);
+        printf("Args global:\n");
+         printf("GLOBAL IN FUNC: %s|%s|%s\n",global_args[0],global_args[1],global_args[2]);
     }
     // msgsnd(msg_id, &message, sizeof(message), 0);
     // msgrcv(msg_id, &message, sizeof(message), 1, 0);
