@@ -57,22 +57,24 @@ struct message_buffer handle_msgs(struct message_buffer msg)
     if (strcmp(msg.arg, "logout") == 0)
     {
         //Algoritmo para deletar um array de structs
+
         for (int i = 0; i < SIZE_USERS; i++)
         {
             if (msg.source == users[i].pid)
             {
-                int j = i;
-                for (j; j < SIZE_USERS - 1; i++)
+                printf("\n%dBuscado: %ld\n", i, users[i].pid);
+                int actual = i;
+                for (i = actual; actual < SIZE_USERS - 1; actual++)
                 {
-                    users[j] = users[j + 1];
+                    users[actual] = users[actual + 1];
                 }
+                struct message_buffer resp_msg;
+                resp_msg.msgtyp = msg.source;
+                strcpy(resp_msg.txt, "Logout Efetuado com Sucesso");
+                strcpy(resp_msg.arg, "ok");
+                return resp_msg;
             }
         }
-        struct message_buffer resp_msg;
-        resp_msg.msgtyp = msg.source;
-        strcpy(resp_msg.txt, "Logout Efetuado com Sucesso");
-        strcpy(resp_msg.arg, "ok");
-        return resp_msg;
     }
 }
 
