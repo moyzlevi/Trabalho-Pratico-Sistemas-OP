@@ -85,6 +85,7 @@ const char **handle_input()
 
     printf("Esperando comandos:\n");
     fgets(str, 256, stdin);
+    str[strcspn(str, "\n")] = 0;
     char *rest = str;
     int i = 0;
     printf("Splitting string \"%s\" into tokens:\n", str);
