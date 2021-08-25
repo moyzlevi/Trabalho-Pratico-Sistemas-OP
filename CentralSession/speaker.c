@@ -9,7 +9,7 @@
 int flagLogin;
 key_t my_key;
 int msg_id;
-
+int flagLogin;
 struct message_buffer
 {
     long msgtyp;
@@ -41,6 +41,7 @@ void login()
             printf("\nEnviado:[arg][txt][source]: %s-%s-%d\n", login_msg.arg, login_msg.txt,login_msg.source);
             if (strcmp(login_msg.arg, "ok") == 0)
             {
+                flagLogin = 1;
                 break;
             }
             else
