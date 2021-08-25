@@ -4,7 +4,9 @@
 #include <string.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <stdlib.h>
 #define SIZE_USERS 20
+#define MAX_ARGS 5
 
 int flagLogin;
 key_t my_key;
@@ -17,7 +19,11 @@ struct message_buffer
     char arg[10];
     char txt[100];
 } message;
-
+void clear(void)
+{
+    while (getchar() != '\n')
+        ;
+}
 void login()
 {
     while (1)
@@ -41,6 +47,7 @@ void login()
             if (strcmp(login_msg.arg, "ok") == 0)
             {
                 flagLogin = 1;
+                fflush(stdin);
                 break;
             }
             else
@@ -67,6 +74,32 @@ void logout()
     msgsnd(msg_id, &logout_msg, sizeof(logout_msg), 0);
     msgrcv(msg_id, &logout_msg, sizeof(logout_msg), 1, 0);
     printf("\nRecebido:[arg][txt][source]: %s-%s-%d\n", logout_msg.arg, logout_msg.txt, logout_msg.source);
+    exit(0);
+}
+
+const char **handle_input()
+{
+    clear();
+    const char *current_args[10];
+    char str[256];
+
+    printf("Esperando comandos:\n");
+    fgets(str, 256, stdin);
+    char *rest = str;
+    int i = 0;
+    printf("Splitting string \"%s\" into tokens:\n", str);
+    while ((current_args[i] = strtok_r(rest, " ", &rest)))
+    {
+        printf("#%d: %s\n", i, current_args[i++]);
+    }
+
+    if (strcmp(current_args[0], "exit") == 0)
+    {
+        logout();
+    }
+
+    const char **return_args = current_args;
+    return return_args;
 }
 
 int main(int argc, char const *argv[])
@@ -77,7 +110,10 @@ int main(int argc, char const *argv[])
     char erros[50];
     printf("=================Programa Speaker=========PID:%d=======\n", getpid());
     login();
-    logout();
+    while (1)
+    {
+        handle_input();
+    }
     // msgsnd(msg_id, &message, sizeof(message), 0);
     // msgrcv(msg_id, &message, sizeof(message), 1, 0);
     // printf("\nRecebido[arg][txt]: %s-%s\n", message.arg, message.txt);
