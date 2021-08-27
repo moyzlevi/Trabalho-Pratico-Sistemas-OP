@@ -85,10 +85,10 @@ int main(int argc, char const *argv[])
     my_key = ftok("progfile", 65);
     msg_id = msgget(my_key, 0666 | IPC_CREAT);
     char erros[50];
-    
+
     char *current_args[50];
     char str[256];
-    
+
     printf("=================Programa Speaker=========PID:%d=======\n", getpid());
     login();
     while (1)
@@ -101,7 +101,7 @@ int main(int argc, char const *argv[])
         str[strcspn(str, "\n")] = 0;
         char *rest = str;
         int i = 0;
-        printf("Splitting string \"%s\" into tokens:\n", str);
+        // printf("Splitting string \"%s\" into tokens:\n", str);
 
         while ((current_args[i] = strtok_r(rest, " ", &rest)))
         {
@@ -115,8 +115,24 @@ int main(int argc, char const *argv[])
             i++;
         }
 
-        printf("Args global:\n");
-        printf("GLOBAL IN FUNC: %s|%s|%s\n", current_args[0], current_args[1], current_args[2]);
+        // printf("Args global:\n");
+        printf("ARGS CAPTURED: %s|%s|%s\n", current_args[0], current_args[1], current_args[2]);
+
+        if (strcmp(current_args[0], "send") == 0)
+        {
+            struct message_buffer send_msg;
+            send_msg.source = getpid();
+            send_msg.msgtyp = 1;
+            strcpy(send_msg.arg, "send");
+            strcpy(send_msg.txt, "");
+            for (int j = 1; j < i; j++)
+            {   
+                strcat(send_msg.txt," ");
+                strcat(send_msg.txt,current_args[j]);
+            }
+            
+            printf("SEND MSG TXT: %s\n",send_msg.txt);
+        }
     }
 
     // msgsnd(msg_id, &message, sizeof(message), 0);
