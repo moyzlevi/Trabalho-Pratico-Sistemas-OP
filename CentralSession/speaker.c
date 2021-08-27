@@ -79,55 +79,50 @@ void logout()
     exit(0);
 }
 
-void handle_input()
-{
-    args_number = 0;
-    clear();
-    char *current_args[50];
-    char str[256];
-
-    printf("Esperando comandos:\n");
-    fgets(str, 256, stdin);
-    str[strcspn(str, "\n")] = 0;
-    char *rest = str;
-    int i = 0;
-    printf("Splitting string \"%s\" into tokens:\n", str);
-    
-    while ((current_args[i] = strtok_r(rest, " ", &rest)))
-    {
-        if (strcmp(current_args[i], "exit") == 0)
-        {
-            logout();
-        }
-        char temp[50];
-        strcpy(temp,current_args[i]);
-        // printf("TEMP: %s\n",temp);--debug
-        global_args[i] = 
-
-        // printf("GLOBAL: %s\n",global_args[i]);
-        printf("#%d: %s\n", i, current_args[i++]);
-        printf("i:%d\n",i);
-        args_number++;
-    }
-    
-    printf("GLOBAL IN FUNC: %s|%s|%s\n",global_args[0],global_args[1],global_args[2]);
-}
-
 int main(int argc, char const *argv[])
 {
     flagLogin = 0;
     my_key = ftok("progfile", 65);
     msg_id = msgget(my_key, 0666 | IPC_CREAT);
     char erros[50];
+    
+    args_number = 0;
+    char *current_args[50];
+    char str[256];
+    
     printf("=================Programa Speaker=========PID:%d=======\n", getpid());
     login();
     while (1)
     {
-        handle_input();
+        // handle_input();
         // printf("%s\n", global_args[0]);
+        clear();
+        printf("Esperando comandos:\n");
+        fgets(str, 256, stdin);
+        str[strcspn(str, "\n")] = 0;
+        char *rest = str;
+        int i = 0;
+        printf("Splitting string \"%s\" into tokens:\n", str);
+
+        while ((current_args[i] = strtok_r(rest, " ", &rest)))
+        {
+            if (strcmp(current_args[i], "exit") == 0)
+            {
+                logout();
+            }
+            char temp[50];
+            strcpy(temp, current_args[i]);
+            // printf("TEMP: %s\n",temp);--debug
+            // printf("GLOBAL: %s\n",global_args[i]);
+            printf("#%d: %s\n", i, current_args[i++]);
+            printf("i:%d\n", i);
+            args_number++;
+        }
+
         printf("Args global:\n");
-         printf("GLOBAL IN FUNC: %s|%s|%s\n",global_args[0],global_args[1],global_args[2]);
+        printf("GLOBAL IN FUNC: %s|%s|%s\n", current_args[0], current_args[1], current_args[2]);
     }
+
     // msgsnd(msg_id, &message, sizeof(message), 0);
     // msgrcv(msg_id, &message, sizeof(message), 1, 0);
     // printf("\nRecebido[arg][txt]: %s-%s\n", message.arg, message.txt);
