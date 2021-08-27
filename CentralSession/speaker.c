@@ -86,7 +86,6 @@ int main(int argc, char const *argv[])
     msg_id = msgget(my_key, 0666 | IPC_CREAT);
     char erros[50];
     
-    args_number = 0;
     char *current_args[50];
     char str[256];
     
@@ -110,13 +109,10 @@ int main(int argc, char const *argv[])
             {
                 logout();
             }
-            char temp[50];
-            strcpy(temp, current_args[i]);
             // printf("TEMP: %s\n",temp);--debug
             // printf("GLOBAL: %s\n",global_args[i]);
-            printf("#%d: %s\n", i, current_args[i++]);
-            printf("i:%d\n", i);
-            args_number++;
+            // printf("#%d: %s\n", i, current_args[i++]);
+            i++;
         }
 
         printf("Args global:\n");
