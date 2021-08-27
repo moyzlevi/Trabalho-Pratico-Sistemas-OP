@@ -52,8 +52,7 @@ struct message_buffer handle_msgs(struct message_buffer msg)
         strcpy(resp_msg.txt, "Login foi efetuado com sucesso");
         strcpy(resp_msg.arg, "ok");
         return resp_msg;
-    }
-
+    }else
     if (strcmp(msg.arg, "logout") == 0)
     {
         //Algoritmo para deletar um array de structs
@@ -75,7 +74,10 @@ struct message_buffer handle_msgs(struct message_buffer msg)
                 return resp_msg;
             }
         }
+    }else{
+         return msg;
     }
+   
 }
 
 int main(int argc, char const *argv[])

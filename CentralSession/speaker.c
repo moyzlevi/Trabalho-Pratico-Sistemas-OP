@@ -123,15 +123,16 @@ int main(int argc, char const *argv[])
             struct message_buffer send_msg;
             send_msg.source = getpid();
             send_msg.msgtyp = 1;
-            strcpy(send_msg.arg, "send");
+            strcpy(send_msg.arg, current_args[1]);
             strcpy(send_msg.txt, "");
-            for (int j = 1; j < i; j++)
+            for (int j = 2; j < i; j++)
             {   
-                strcat(send_msg.txt," ");
                 strcat(send_msg.txt,current_args[j]);
+                if(j<i-1){strcat(send_msg.txt," ");}
             }
-            
+            printf("SEND MSG ARG: %s\n",send_msg.arg);
             printf("SEND MSG TXT: %s\n",send_msg.txt);
+            msgsnd(msg_id, &send_msg, sizeof(message), 0);
         }
     }
 
