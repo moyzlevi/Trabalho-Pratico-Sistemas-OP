@@ -129,7 +129,7 @@ int main(int argc, char const *argv[])
         }
 
         // printf("Args global:\n");
-        // printf("ARGS CAPTURED: %s|%s|%s\n", current_args[0], current_args[1], current_args[2]);
+        printf("ARGS CAPTURED: %s|%s|%s\n", current_args[0], current_args[1], current_args[2]);
 
         if (strcmp(current_args[0], "send") == 0)
         {
