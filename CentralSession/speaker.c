@@ -161,7 +161,7 @@ int main(int argc, char const *argv[])
             strcpy(send_msg.arg, current_args[0]);
             strcpy(send_msg.dest, "chairman");
             strcpy(send_msg.txt, "");
-            msgsnd(msg_id, &send_msg, sizeof(send_msg), 0);
+                        msgsnd(msg_id, &send_msg, sizeof(send_msg), 0);
             msgrcv(msg_id, &all_msgs, sizeof(all_msgs), getpid(), 0);
             printf("\nMy messages:\n%s",all_msgs.txt);
         }
