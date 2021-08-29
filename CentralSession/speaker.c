@@ -155,15 +155,15 @@ int main(int argc, char const *argv[])
         if (strcmp(current_args[0], "msgs") == 0)
         {
             struct req_message_buffer send_msg;
-            struct message_buffer resp_msg;
+            struct message_buffer all_msgs;
             send_msg.source = getpid();
             send_msg.msgtyp = 1;
             strcpy(send_msg.arg, current_args[0]);
             strcpy(send_msg.dest, "chairman");
             strcpy(send_msg.txt, "");
             msgsnd(msg_id, &send_msg, sizeof(send_msg), 0);
-            msgrcv(msg_id, &resp_msg, sizeof(resp_msg), getpid(), 0);
-            printf("\nRecebido:[type][arg][txt][source]: %ld-%s-%s-%d\n", resp_msg.msgtyp, resp_msg.arg, resp_msg.txt, resp_msg.source);
+            msgrcv(msg_id, &all_msgs, sizeof(all_msgs), getpid(), 0);
+            printf("\nMy messages:\n%s",all_msgs.txt);
         }
         if (strcmp(current_args[0], "users") == 0)
         {

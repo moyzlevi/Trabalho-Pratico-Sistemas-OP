@@ -137,6 +137,8 @@ struct message_buffer handle_msgs(struct req_message_buffer msg)
     }
     else if (strcmp(msg.arg, "msgs") == 0)
     {
+        struct message_buffer resp_msg;
+        strcpy(resp_msg.txt, "");
         char currentUsername[20];
         for (int i = 0; i < SIZE_USERS; i++)
         {
@@ -150,14 +152,19 @@ struct message_buffer handle_msgs(struct req_message_buffer msg)
         {
             if (strcmp(msgs[i].dest, currentUsername) == 0)
             {
-                printf("\n%s said: %s\n", msgs[i].source, msgs[i].content);
+                char str[500];
+                sprintf(str, "\n%s said: %s\n", msgs[i].source, msgs[i].content);
+                strcat(resp_msg.txt, str);
+                if (i < lastUserIndex - 1)
+                {
+                    strcat(resp_msg.txt, "\n");
+                }
             }
         }
 
-        struct message_buffer resp_msg;
         resp_msg.msgtyp = msg.source;
         resp_msg.source = getpid();
-        strcpy(resp_msg.txt, "mensagens mostradas");
+
         strcpy(resp_msg.arg, "ok");
         return resp_msg;
     }
@@ -257,7 +264,7 @@ struct message_buffer handle_msgs(struct req_message_buffer msg)
     else if (strcmp(msg.arg, "dpost") == 0)
     {
         int post_i = atoi(msg.txt);
-        for (int i = post_i; i <SIZE_MSGS  - 1; i++)
+        for (int i = post_i; i < SIZE_MSGS - 1; i++)
         {
             forum[i] = forum[i + 1];
         }
@@ -270,7 +277,7 @@ struct message_buffer handle_msgs(struct req_message_buffer msg)
     }
     else if (strcmp(msg.arg, "dposts") == 0)
     {
-        for (int i = 0; i <SIZE_MSGS; i++)
+        for (int i = 0; i < SIZE_MSGS; i++)
         {
             forum[i] = forum[-1];
         }
