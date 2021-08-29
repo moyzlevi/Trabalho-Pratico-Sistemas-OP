@@ -33,23 +33,23 @@ int main(int argc, char const *argv[])
         exit(1);
     }
 
-        printf("writing to segment: \"%s\"\n", "joao");
-        strncpy(data, "joao", SHM_SIZE);
+        // printf("writing to segment: \"%s\"\n", "jose");
+        // strncpy(data, "jose", SHM_SIZE);
 
     
         printf("segment contains: \"%s\"\n", data);
     
-    while (1)
-    {
+    // while (1)
+    // {
         
-    }
+    // }
     
 
-    if (shmdt(data) == -1)
-    {
-        perror("shmdt");
-        exit(1);
-    }
+    // if (shmdt(data) == -1)
+    // {
+    //     perror("shmdt");
+    //     exit(1);
+    // }
 
     return 0;
 }
