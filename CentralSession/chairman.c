@@ -12,7 +12,7 @@ struct message_buffer
     long msgtyp;
     pid_t source;
     char arg[10];
-    char txt[100];
+    char txt[500];
 };
 struct req_message_buffer
 {
@@ -147,7 +147,7 @@ struct message_buffer handle_msgs(struct req_message_buffer msg)
         {
             if (strcmp(msgs[i].dest, currentUsername) == 0)
             {
-                printf("\n%s said: %s\n",msgs[i].source,msgs[i].content);
+                printf("\n%s said: %s\n", msgs[i].source, msgs[i].content);
             }
         }
 
@@ -156,6 +156,24 @@ struct message_buffer handle_msgs(struct req_message_buffer msg)
         resp_msg.source = getpid();
         strcpy(resp_msg.txt, "mensagens mostradas");
         strcpy(resp_msg.arg, "ok");
+        return resp_msg;
+    }
+    else if (strcmp(msg.arg, "users") == 0)
+    {
+        struct message_buffer resp_msg;
+        resp_msg.msgtyp = msg.source;
+        resp_msg.source = getpid();
+        strcpy(resp_msg.arg, "ok");
+        strcpy(resp_msg.txt, "");
+        for (int i = 0; i < lastUserIndex; i++)
+        {
+
+            strcat(resp_msg.txt, users[i].username);
+            if (i < lastUserIndex-1)
+            {
+                strcat(resp_msg.txt, ",");
+            }
+        }
         return resp_msg;
     }
 }

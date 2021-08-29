@@ -19,7 +19,7 @@ struct message_buffer
     long msgtyp;
     pid_t source;
     char arg[10];
-    char txt[100];
+    char txt[500];
 } message;
 
 
@@ -160,6 +160,18 @@ int main(int argc, char const *argv[])
             msgsnd(msg_id, &send_msg, sizeof(send_msg), 0);
             msgrcv(msg_id, &resp_msg, sizeof(resp_msg), getpid(), 0);
             printf("\nRecebido:[type][arg][txt][source]: %ld-%s-%s-%d\n", resp_msg.msgtyp,resp_msg.arg, resp_msg.txt, resp_msg.source);
+        }
+        if (strcmp(current_args[0], "users") == 0){
+            struct req_message_buffer send_msg;
+            struct message_buffer resp_msg;
+            send_msg.source = getpid();
+            send_msg.msgtyp = 1;
+            strcpy(send_msg.arg, current_args[0]);
+            strcpy(send_msg.dest, "chairman");
+            strcpy(send_msg.txt, "");
+            msgsnd(msg_id, &send_msg, sizeof(send_msg), 0);
+            msgrcv(msg_id, &resp_msg, sizeof(resp_msg), getpid(), 0);
+            printf("\nUsuários: %s", resp_msg.txt);
         }
     }
 
