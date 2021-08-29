@@ -131,7 +131,26 @@ struct message_buffer handle_msgs(struct req_message_buffer msg)
         }
 
         return resp_msg;
-    }else if (strcmp(msg.arg, "msgs") == 0){
+    }
+    else if (strcmp(msg.arg, "msgs") == 0)
+    {
+        char currentUsername[20];
+        for (int i = 0; i < SIZE_USERS; i++)
+        {
+            if (users[i].pid == msg.source)
+            {
+                strcpy(currentUsername, users[i].username);
+            }
+        }
+
+        for (int i = 0; i < SIZE_MSGS; i++)
+        {
+            if (strcmp(msgs[i].dest, currentUsername) == 0)
+            {
+                printf("\n%s said: %s\n",msgs[i].source,msgs[i].content);
+            }
+        }
+
         struct message_buffer resp_msg;
         resp_msg.msgtyp = msg.source;
         resp_msg.source = getpid();
