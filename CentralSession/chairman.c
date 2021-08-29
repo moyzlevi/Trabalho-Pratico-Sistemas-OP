@@ -200,6 +200,30 @@ struct message_buffer handle_msgs(struct req_message_buffer msg)
         strcpy(resp_msg.txt, "adicionado no forum");
         return resp_msg;
     }
+    else if (strcmp(msg.arg, "show") == 0)
+    {
+        struct message_buffer resp_msg;
+        resp_msg.msgtyp = msg.source;
+        resp_msg.source = getpid();
+        strcpy(resp_msg.arg, "ok");
+        strcpy(resp_msg.txt, "");
+
+        for (int i = 0; i < lastPostIndex; i++)
+        {
+            char str[5];
+            sprintf(str, "#%d ", i);
+            strcat(resp_msg.txt, str);
+            strcat(resp_msg.txt, forum[i].source);
+            strcat(resp_msg.txt, ": ");
+            strcat(resp_msg.txt, forum[i].content);
+
+            if (i < lastUserIndex - 1)
+            {
+                strcat(resp_msg.txt, "\n");
+            }
+        }
+        return resp_msg;
+    }
 }
 
 int main(int argc, char const *argv[])
