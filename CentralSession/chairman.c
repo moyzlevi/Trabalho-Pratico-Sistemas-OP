@@ -13,6 +13,14 @@ struct message_buffer
     char arg[10];
     char txt[100];
 };
+struct req_message_buffer
+{
+    long msgtyp;
+    pid_t source;
+    char arg[10];
+    char txt[100];
+    char dest[100];
+};
 
 struct user
 {
@@ -22,7 +30,7 @@ struct user
 struct user users[SIZE_USERS];
 int lastUserIndex;
 
-struct message_buffer handle_msgs(struct message_buffer msg)
+struct message_buffer handle_msgs(struct req_message_buffer msg)
 {
     if (strcmp(msg.arg, "login") == 0)
     {
@@ -74,8 +82,13 @@ struct message_buffer handle_msgs(struct message_buffer msg)
                 return resp_msg;
             }
         }
-    }else{
-         return msg;
+    }else if(strcmp(msg.arg, "send") == 0){
+         struct message_buffer resp_msg;
+        resp_msg.msgtyp = msg.source;
+        resp_msg.source = getpid();
+        strcpy(resp_msg.txt, "mensagem recebida com success PLACEHOLDER");
+        strcpy(resp_msg.arg, "ok");
+        return resp_msg;
     }
    
 }
@@ -84,6 +97,7 @@ int main(int argc, char const *argv[])
 {
     lastUserIndex = 0;
     struct message_buffer message;
+    struct req_message_buffer rq_message;
     key_t my_key;
     int msg_id;
     my_key = ftok("progfile", 65);
@@ -91,13 +105,12 @@ int main(int argc, char const *argv[])
     printf("===========Programa ChairMan===PID:%d======\nAguardando Mensagens...\n", getpid());
     while (1)
     {
-        msgrcv(msg_id, &message, sizeof(message), 1, 0);
-        printf("\nMensagem recebida[arg][txt][source]: %s-%s-%d\n", message.arg, message.txt, message.source);
-        struct message_buffer resp_message = handle_msgs(message);
-        printf("\nResp_Message after func[arg][txt][source]: \n%s-%s-%d\n", resp_message.arg, resp_message.txt, message.source);
+        msgrcv(msg_id, &rq_message, sizeof(rq_message), 1, 0);
+        printf("\nMensagem recebida[arg][txt][source]: %s-%s-%d\n", rq_message.arg, rq_message.txt, rq_message.source);
+        message = handle_msgs(rq_message);
+        printf("\nResp_Message after func[arg][txt][source]: \n%s-%s-%d\n", message.arg, message.txt, message.source);
         printf("----------------------------------------------------");
-        resp_message.msgtyp = 1;
-        msgsnd(msg_id, &resp_message, sizeof(resp_message), 0);
+        msgsnd(msg_id, &message, sizeof(message), 0);
     }
 
     return 0;
