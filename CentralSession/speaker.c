@@ -52,10 +52,10 @@ void login()
         printf("Digite o usuário para se logar:\n");
         scanf("%s", login_msg.txt);
         strcpy(myuser, login_msg.txt);
-        printf("\nCaptured[arg][txt]: %s-%s\n", login_msg.arg, login_msg.txt);
+        // printf("\nCaptured[arg][txt]: %s-%s\n", login_msg.arg, login_msg.txt);
         if (strlen(login_msg.txt) <= SIZE_USERS)
         {
-            printf("\nEnviado:[arg][txt][source]: %s-%s-%d\n", login_msg.arg, login_msg.txt, login_msg.source);
+            // printf("\nEnviado:[arg][txt][source]: %s-%s-%d\n", login_msg.arg, login_msg.txt, login_msg.source);
             msgsnd(msg_id, &login_msg, sizeof(login_msg), 0);
             msgrcv(msg_id, &resp_msg, sizeof(resp_msg), login_msg.source, 0);
             printf("\nRecebido:[type][arg][txt][source]: %ld-%s-%s-%d\n", resp_msg.msgtyp, resp_msg.arg, resp_msg.txt, resp_msg.source);
@@ -129,7 +129,7 @@ int main(int argc, char const *argv[])
         }
 
         // printf("Args global:\n");
-        printf("ARGS CAPTURED: %s|%s|%s\n", current_args[0], current_args[1], current_args[2]);
+        // printf("ARGS CAPTURED: %s|%s|%s\n", current_args[0], current_args[1], current_args[2]);
 
         if (strcmp(current_args[0], "send") == 0)
         {
@@ -147,9 +147,9 @@ int main(int argc, char const *argv[])
                     strcat(send_msg.txt, " ");
                 }
             }
-            printf("SEND MSG ARG: %s\n", send_msg.arg);
-            printf("SEND MSG TXT: %s\n", send_msg.txt);
-            printf("SEND MSG DEST: %s\n", send_msg.dest);
+            // printf("SEND MSG ARG: %s\n", send_msg.arg);
+            // printf("SEND MSG TXT: %s\n", send_msg.txt);
+            // printf("SEND MSG DEST: %s\n", send_msg.dest);
             msgsnd(msg_id, &send_msg, sizeof(send_msg), 0);
         }
         if (strcmp(current_args[0], "msgs") == 0)
@@ -199,8 +199,8 @@ int main(int argc, char const *argv[])
                     strcat(send_msg.txt, " ");
                 }
             }
-            printf("SEND MSG ARG: %s\n", send_msg.arg);
-            printf("SEND MSG TXT: %s\n", send_msg.txt);
+            // printf("SEND MSG ARG: %s\n", send_msg.arg);
+            // printf("SEND MSG TXT: %s\n", send_msg.txt);
             // printf("SEND MSG DEST: %s\n",send_msg.dest);
             msgsnd(msg_id, &send_msg, sizeof(send_msg), 0);
             msgrcv(msg_id, &resp_msg, sizeof(resp_msg), getpid(), 0);

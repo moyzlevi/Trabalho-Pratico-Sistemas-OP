@@ -82,7 +82,7 @@ struct message_buffer handle_msgs(struct req_message_buffer msg)
         {
             if (msg.source == users[i].pid)
             {
-                printf("\n%dBuscado: %ld\n", i, users[i].pid);
+                // printf("\n%dBuscado: %ld\n", i, users[i].pid);
                 int actual = i;
                 for (i = actual; actual < SIZE_USERS - 1; actual++)
                 {
@@ -121,8 +121,8 @@ struct message_buffer handle_msgs(struct req_message_buffer msg)
         resp_msg.source = getpid();
         if (flagFound)
         {
-            printf("Mensagem guardada como[dest][source][txt]: %s-%s-%s", msgs[lastMsgIndex].dest,
-                   msgs[lastMsgIndex].source, msgs[lastMsgIndex].content);
+            // printf("Mensagem guardada como[dest][source][txt]: %s-%s-%s", msgs[lastMsgIndex].dest,
+            //        msgs[lastMsgIndex].source, msgs[lastMsgIndex].content);
             lastMsgIndex++;
             strcpy(resp_msg.txt, "mensagem recebida com sucesso");
             strcpy(resp_msg.arg, "ok");
@@ -247,7 +247,7 @@ struct message_buffer handle_msgs(struct req_message_buffer msg)
         {
             if (strcmp(currentUsername, msgs[i].dest) == 0)
             {
-                printf("\n%dBuscado: %ld\n", i, users[i].pid);
+                // printf("\n%dBuscado: %ld\n", i, users[i].pid);
                 int actual = i;
                 for (i = actual; actual < SIZE_USERS - 1; actual++)
                 {
@@ -306,7 +306,7 @@ int main(int argc, char const *argv[])
         msgrcv(msg_id, &rq_message, sizeof(rq_message), 1, 0);
         printf("\nMensagem recebida[arg][txt][source][dest]: %ld-%s-%s-%d-%s\n", rq_message.msgtyp, rq_message.arg, rq_message.txt, rq_message.source, rq_message.dest);
         message = handle_msgs(rq_message);
-        printf("\nResp_Message after func[type][arg][txt][source]: \n%ld-%s-%s-%d\n", message.msgtyp, message.arg, message.txt, message.source);
+        // printf("\nResp_Message after func[type][arg][txt][source]: \n%ld-%s-%s-%d\n", message.msgtyp, message.arg, message.txt, message.source);
         printf("----------------------------------------------------");
         msgsnd(msg_id, &message, sizeof(message), 0);
     }
