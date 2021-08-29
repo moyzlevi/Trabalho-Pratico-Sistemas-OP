@@ -131,6 +131,13 @@ struct message_buffer handle_msgs(struct req_message_buffer msg)
         }
 
         return resp_msg;
+    }else if (strcmp(msg.arg, "msgs") == 0){
+        struct message_buffer resp_msg;
+        resp_msg.msgtyp = msg.source;
+        resp_msg.source = getpid();
+        strcpy(resp_msg.txt, "mensagens mostradas");
+        strcpy(resp_msg.arg, "ok");
+        return resp_msg;
     }
 }
 
