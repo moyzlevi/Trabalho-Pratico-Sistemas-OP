@@ -31,6 +31,7 @@ struct user
 struct user users[SIZE_USERS];
 int lastUserIndex;
 int lastMsgIndex;
+int lastPostIndex;
 
 struct msg_record
 {
@@ -39,6 +40,7 @@ struct msg_record
     char dest[20];
 };
 struct msg_record msgs[SIZE_MSGS];
+struct msg_record forum[SIZE_MSGS];
 
 struct message_buffer handle_msgs(struct req_message_buffer msg)
 {
@@ -169,11 +171,33 @@ struct message_buffer handle_msgs(struct req_message_buffer msg)
         {
 
             strcat(resp_msg.txt, users[i].username);
-            if (i < lastUserIndex-1)
+            if (i < lastUserIndex - 1)
             {
                 strcat(resp_msg.txt, ",");
             }
         }
+        return resp_msg;
+    }
+    else if (strcmp(msg.arg, "post") == 0)
+    {
+        char currentUsername[20];
+        for (int i = 0; i < SIZE_USERS; i++)
+        {
+            if (users[i].pid == msg.source)
+            {
+                strcpy(currentUsername, users[i].username);
+            }
+        }
+        strcpy(forum[lastPostIndex].content, msg.txt);
+        strcpy(forum[lastPostIndex].source, currentUsername);
+        printf("Mensagem guardada como [source][txt]: %s-%s", forum[lastPostIndex].source,
+               forum[lastPostIndex].content);
+        lastPostIndex++;
+        struct message_buffer resp_msg;
+        resp_msg.msgtyp = msg.source;
+        resp_msg.source = getpid();
+        strcpy(resp_msg.arg, "ok");
+        strcpy(resp_msg.txt, "adicionado no forum");
         return resp_msg;
     }
 }
