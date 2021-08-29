@@ -5,6 +5,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 #define SIZE_USERS 20
+#define SIZE_MSGS 100
 
 struct message_buffer
 {
@@ -29,6 +30,15 @@ struct user
 };
 struct user users[SIZE_USERS];
 int lastUserIndex;
+int lastMsgIndex;
+
+struct msg_record
+{
+    char source[20];
+    char content[100];
+    char dest[20];
+};
+struct msg_record msgs[SIZE_MSGS];
 
 struct message_buffer handle_msgs(struct req_message_buffer msg)
 {
@@ -60,8 +70,8 @@ struct message_buffer handle_msgs(struct req_message_buffer msg)
         strcpy(resp_msg.txt, "Login foi efetuado com sucesso");
         strcpy(resp_msg.arg, "ok");
         return resp_msg;
-    }else
-    if (strcmp(msg.arg, "logout") == 0)
+    }
+    else if (strcmp(msg.arg, "logout") == 0)
     {
         //Algoritmo para deletar um array de structs
 
@@ -82,20 +92,52 @@ struct message_buffer handle_msgs(struct req_message_buffer msg)
                 return resp_msg;
             }
         }
-    }else if(strcmp(msg.arg, "send") == 0){
-         struct message_buffer resp_msg;
+    }
+    else if (strcmp(msg.arg, "send") == 0)
+    {
+        int flagFound = 0;
+        for (int i = 0; i < SIZE_USERS; i++)
+        {
+            if (strcmp(msg.dest, users[i].username) == 0)
+            {
+                flagFound = 1;
+                strcpy(msgs[lastMsgIndex].content, msg.txt);
+                strcpy(msgs[lastMsgIndex].dest, msg.dest);
+                for (int j = 0; j < SIZE_USERS; j++)
+                {
+                    if (msg.source == users[j].pid)
+                    {
+                        strcpy(msgs[lastMsgIndex].source, users[j].username);
+                    }
+                }
+            }
+        }
+
+        struct message_buffer resp_msg;
         resp_msg.msgtyp = msg.source;
         resp_msg.source = getpid();
-        strcpy(resp_msg.txt, "mensagem recebida com success PLACEHOLDER");
-        strcpy(resp_msg.arg, "ok");
+        if (flagFound)
+        {
+            printf("Mensagem guardada como[dest][source][txt]: %s-%s-%s", msgs[lastMsgIndex].dest,
+                   msgs[lastMsgIndex].source, msgs[lastMsgIndex].content);
+            lastMsgIndex++;
+            strcpy(resp_msg.txt, "mensagem recebida com sucesso");
+            strcpy(resp_msg.arg, "ok");
+        }
+        else
+        {
+            strcpy(resp_msg.txt, "Dest Not Found");
+            strcpy(resp_msg.arg, "fail");
+        }
+
         return resp_msg;
     }
-   
 }
 
 int main(int argc, char const *argv[])
 {
     lastUserIndex = 0;
+    lastMsgIndex = 0;
     struct message_buffer message;
     struct req_message_buffer rq_message;
     key_t my_key;
@@ -106,9 +148,9 @@ int main(int argc, char const *argv[])
     while (1)
     {
         msgrcv(msg_id, &rq_message, sizeof(rq_message), 1, 0);
-        printf("\nMensagem recebida[arg][txt][source][dest]: %ld-%s-%s-%d-%s\n", rq_message.msgtyp,rq_message.arg, rq_message.txt, rq_message.source,rq_message.dest);
+        printf("\nMensagem recebida[arg][txt][source][dest]: %ld-%s-%s-%d-%s\n", rq_message.msgtyp, rq_message.arg, rq_message.txt, rq_message.source, rq_message.dest);
         message = handle_msgs(rq_message);
-        printf("\nResp_Message after func[type][arg][txt][source]: \n%ld-%s-%s-%d\n", message.msgtyp,message.arg, message.txt, message.source);
+        printf("\nResp_Message after func[type][arg][txt][source]: \n%ld-%s-%s-%d\n", message.msgtyp, message.arg, message.txt, message.source);
         printf("----------------------------------------------------");
         msgsnd(msg_id, &message, sizeof(message), 0);
     }
