@@ -268,6 +268,19 @@ struct message_buffer handle_msgs(struct req_message_buffer msg)
         lastPostIndex--;
         return resp_msg;
     }
+    else if (strcmp(msg.arg, "dposts") == 0)
+    {
+        for (int i = 0; i <SIZE_MSGS; i++)
+        {
+            forum[i] = forum[-1];
+        }
+        struct message_buffer resp_msg;
+        resp_msg.msgtyp = msg.source;
+        strcpy(resp_msg.txt, "Posts Deletado com Sucesso");
+        strcpy(resp_msg.arg, "ok");
+        lastPostIndex = 0;
+        return resp_msg;
+    }
 }
 
 int main(int argc, char const *argv[])
