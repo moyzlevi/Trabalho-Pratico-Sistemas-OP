@@ -223,6 +223,33 @@ struct message_buffer handle_msgs(struct req_message_buffer msg)
             }
         }
         return resp_msg;
+    }else if (strcmp(msg.arg, "dmsgs") == 0){
+        char currentUsername[20];
+        for (int i = 0; i < SIZE_USERS; i++)
+        {
+            if (users[i].pid == msg.source)
+            {
+                strcpy(currentUsername, users[i].username);
+            }
+        }
+
+        for (int i = 0; i < SIZE_MSGS; i++)
+        {
+            if (strcmp(currentUsername,msgs[i].dest)==0)
+            {
+                printf("\n%dBuscado: %ld\n", i, users[i].pid);
+                int actual = i;
+                for (i = actual; actual < SIZE_USERS - 1; actual++)
+                {
+                    users[actual] = users[actual + 1];
+                }
+                struct message_buffer resp_msg;
+                resp_msg.msgtyp = msg.source;
+                strcpy(resp_msg.txt, "Mensagens Deletadas");
+                strcpy(resp_msg.arg, "ok");
+                return resp_msg;
+            }
+        }
     }
 }
 
