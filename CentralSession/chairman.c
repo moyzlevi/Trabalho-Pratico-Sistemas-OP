@@ -3,6 +3,7 @@
 #include <sys/msg.h>
 #include <string.h>
 #include <sys/types.h>
+#include <stdlib.h>
 #include <unistd.h>
 #define SIZE_USERS 20
 #define SIZE_MSGS 100
@@ -223,7 +224,9 @@ struct message_buffer handle_msgs(struct req_message_buffer msg)
             }
         }
         return resp_msg;
-    }else if (strcmp(msg.arg, "dmsgs") == 0){
+    }
+    else if (strcmp(msg.arg, "dmsgs") == 0)
+    {
         char currentUsername[20];
         for (int i = 0; i < SIZE_USERS; i++)
         {
@@ -235,7 +238,7 @@ struct message_buffer handle_msgs(struct req_message_buffer msg)
 
         for (int i = 0; i < SIZE_MSGS; i++)
         {
-            if (strcmp(currentUsername,msgs[i].dest)==0)
+            if (strcmp(currentUsername, msgs[i].dest) == 0)
             {
                 printf("\n%dBuscado: %ld\n", i, users[i].pid);
                 int actual = i;
@@ -250,6 +253,20 @@ struct message_buffer handle_msgs(struct req_message_buffer msg)
                 return resp_msg;
             }
         }
+    }
+    else if (strcmp(msg.arg, "dpost") == 0)
+    {
+        int post_i = atoi(msg.txt);
+        for (int i = post_i; i <SIZE_MSGS  - 1; i++)
+        {
+            forum[i] = forum[i + 1];
+        }
+        struct message_buffer resp_msg;
+        resp_msg.msgtyp = msg.source;
+        strcpy(resp_msg.txt, "Post Deletado com Sucesso");
+        strcpy(resp_msg.arg, "ok");
+        lastPostIndex--;
+        return resp_msg;
     }
 }
 

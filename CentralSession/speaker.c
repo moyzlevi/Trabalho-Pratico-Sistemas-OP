@@ -33,7 +33,7 @@ struct req_message_buffer
 };
 
 void clear(void)
-{   
+{
     while (getchar() != '\n')
         ;
 }
@@ -227,7 +227,18 @@ int main(int argc, char const *argv[])
             msgsnd(msg_id, &send_msg, sizeof(send_msg), 0);
             msgrcv(msg_id, &resp_msg, sizeof(resp_msg), getpid(), 0);
             printf("\nRecebido:[type][arg][txt][source]: %ld-%s-%s-%d\n", resp_msg.msgtyp, resp_msg.arg, resp_msg.txt, resp_msg.source);
-
+        }
+        if (strcmp(current_args[0], "del") == 0 && strcmp(current_args[1], "post") == 0)
+        {
+            struct req_message_buffer send_msg;
+            struct message_buffer resp_msg;
+            send_msg.source = getpid();
+            send_msg.msgtyp = 1;
+            strcpy(send_msg.arg, "dpost");
+            strcpy(send_msg.txt,current_args[2]);
+            msgsnd(msg_id, &send_msg, sizeof(send_msg), 0);
+            msgrcv(msg_id, &resp_msg, sizeof(resp_msg), getpid(), 0);
+            printf("\nRecebido:[type][arg][txt][source]: %ld-%s-%s-%d\n", resp_msg.msgtyp, resp_msg.arg, resp_msg.txt, resp_msg.source);
         }
     }
 
