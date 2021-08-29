@@ -4,8 +4,17 @@
 #include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
+#define SIZE_USERS 20
+#define SHM_SIZE 1024
 
-#define SHM_SIZE 1024 /* make it a 1K shared memory segment */
+struct user users[SIZE_USERS];
+typedef user
+{
+    long pid;
+    char username[21];
+    int lastUserIndex;
+};
+typedef user users[];
 
 int main(int argc, char const *argv[])
 {
@@ -26,24 +35,21 @@ int main(int argc, char const *argv[])
         exit(1);
     }
 
-    data = shmat(shmid, NULL, 0);
+    users = shmat(shmid, NULL, 0);
     if (data == (char *)(-1))
     {
         perror("shmat");
         exit(1);
     }
 
-        printf("writing to segment: \"%s\"\n", "joao");
-        strncpy(data, "joao", SHM_SIZE);
+    printf("writing to segment: \"%s\"\n", "joao");
+    strncpy(data, "joao", SHM_SIZE);
 
-    
-        printf("segment contains: \"%s\"\n", data);
-    
+    printf("segment contains: \"%s\"\n", data);
+
     while (1)
     {
-        
     }
-    
 
     if (shmdt(data) == -1)
     {
