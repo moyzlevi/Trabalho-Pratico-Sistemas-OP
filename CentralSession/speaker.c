@@ -58,7 +58,7 @@ void login()
             printf("\nEnviado:[arg][txt][source]: %s-%s-%d\n", login_msg.arg, login_msg.txt, login_msg.source);
             msgsnd(msg_id, &login_msg, sizeof(login_msg), 0);
             msgrcv(msg_id, &resp_msg, sizeof(resp_msg), login_msg.source, 0);
-            printf("\nRecebido:[arg][txt][source]: %s-%s-%d\n", resp_msg.arg, resp_msg.txt, resp_msg.source);
+            printf("\nRecebido:[type][arg][txt][source]: %ld-%s-%s-%d\n",resp_msg.msgtyp ,resp_msg.arg, resp_msg.txt, resp_msg.source);
             if (strcmp(resp_msg.arg, "ok") == 0)
             {
                 flagLogin = 1;
@@ -88,7 +88,7 @@ void logout()
     printf("Deslongando...\n");
     msgsnd(msg_id, &logout_msg, sizeof(logout_msg), 0);
     msgrcv(msg_id, &logout_msg, sizeof(logout_msg), logout_msg.source, 0);
-    printf("\nRecebido:[arg][txt][source]: %s-%s-%d\n", logout_msg.arg, logout_msg.txt, logout_msg.source);
+    printf("\nRecebido:[type][arg][txt][source]: %ld-%s-%s-%d\n", logout_msg.msgtyp,logout_msg.arg, logout_msg.txt, logout_msg.source);
     exit(0);
 }
 
@@ -146,6 +146,7 @@ int main(int argc, char const *argv[])
             }
             printf("SEND MSG ARG: %s\n",send_msg.arg);
             printf("SEND MSG TXT: %s\n",send_msg.txt);
+            printf("SEND MSG DEST: %s\n",send_msg.dest);
             msgsnd(msg_id, &send_msg, sizeof(send_msg), 0);
         }
     }
