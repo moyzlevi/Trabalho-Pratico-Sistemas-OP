@@ -304,7 +304,8 @@ int main(int argc, char const *argv[])
     while (1)
     {
         msgrcv(msg_id, &rq_message, sizeof(rq_message), 1, 0);
-        printf("\nMensagem recebida[arg][txt][source][dest]: %ld-%s-%s-%d-%s\n", rq_message.msgtyp, rq_message.arg, rq_message.txt, rq_message.source, rq_message.dest);
+        printf("\nMensagem recebida[arg][txt][source][dest]: %ld-%s-%s-%d-%s\n", rq_message.msgtyp, 
+        rq_message.arg, rq_message.txt, rq_message.source, rq_message.dest);
         message = handle_msgs(rq_message);
         // printf("\nResp_Message after func[type][arg][txt][source]: \n%ld-%s-%s-%d\n", message.msgtyp, message.arg, message.txt, message.source);
         printf("----------------------------------------------------");
